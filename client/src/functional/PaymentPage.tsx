@@ -10,6 +10,7 @@ const PaymentPage: React.FC = () => {
   const res = useSelector((state) => state);
   const history = useHistory();
   let redx: any;
+  console.log(res)
   useEffect(() => {
     redx = JSON.parse(JSON.stringify(res));
     if (redx.payment_status! ) {
@@ -19,7 +20,7 @@ const PaymentPage: React.FC = () => {
         alert("paymnet failed.. Try again");
         history.push("/")
       }
-    } else console.log("ooh come on", redx);
+    } else console.log("ooh come on");
   });
 
   const dispatch = useDispatch();
@@ -57,8 +58,18 @@ const PaymentPage: React.FC = () => {
     const paymentObject = new (window as any).Razorpay(options);
     paymentObject.open();
   }
+  function displaypaymentdetails()
+  { const redx = JSON.parse(JSON.stringify(res));
+    return(<div>
+      <div>Product:{redx.payment.product_name}</div>
+      <div>Amount:{(redx.payment.amount/100).toString()}</div>
+      <div>OrderId: {redx.payment.id}</div>
+      </div>
+    )
+  }
   return (
     <div>
+      {displaypaymentdetails()}
       <Alert severity="warning">Amount will be deducted .You Sure</Alert>
        <Button variant="contained" color="primary" onClick={DisplayPayment }>Confirm Order</Button>
       Payment page

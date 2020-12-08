@@ -1,17 +1,16 @@
 import express from "express";
-import bodyParser from "body-parser";
 import mongoose from "mongoose";
 import cors from "cors";
 import postRouter from "./routes/posts.js";
+import userprofile from "./routes/profile.js"
 import path from "path";
-import Razorpay from "razorpay";
+import morgan from "morgan"
 import { fileURLToPath } from 'url';
 import cookie from "cookie-session";
 const app = express();
 
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({extended:false}))
 app.use(
   cookie({
     maxAge: 30 * 24 ** 60 * 60 * 1000,
@@ -19,7 +18,9 @@ app.use(
   })
 );
 app.use(cors());
+app.use(morgan("tiny"))
 app.use("/activity", postRouter);
+app.use("/user",userprofile);
 const PORT = 5000;
 const connection_url =
   "mongodb+srv://suraj-upi:5Jbqba4vUkeZNmSM@cluster0.m7isg.mongodb.net/upiprofile?retryWrites=true&w=majority";

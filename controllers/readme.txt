@@ -1,0 +1,1 @@
+All the different api calls from fronted will be handled in the functions declared

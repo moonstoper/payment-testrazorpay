@@ -1,0 +1,1 @@
+global redux store.

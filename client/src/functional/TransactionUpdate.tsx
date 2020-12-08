@@ -7,10 +7,11 @@ const TransactionUpdate: React.FC = () =>{
     const res = useSelector(state=>state);
     const history = useHistory();
     const dispatch = useDispatch()
+    
     useEffect(()=>{
         const redx = JSON.parse(JSON.stringify(res))
         if(redx.transaction! && redx.transaction.msg==="updated successfully")
-        {
+        {   
             history.push("/");
 
         }

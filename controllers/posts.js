@@ -5,11 +5,12 @@ import Razorpay from "razorpay";
 import crypto from "crypto";
 export const profile = async (req, res) => {
   try {
-    const UserProfile = await userprofile.findOne({ username: "suraj" });
-    // console.log(UserProfile.transid[0]);
-    res.json(UserProfile);
+    console.log("profile");
+    const Userprofile = await userprofile.findOne({ username: "suraj" });
+    res.json(Userprofile)
+    console.log(Userprofile)
   } catch (error) {
-    res.status(404);
+    res.status(500);
   }
 };
 
@@ -81,7 +82,7 @@ export const transactionupdate = async (req, res) => {
         {
           $push: {
             transid: {
-              $each: [req.body.payment_status.paymentId],
+              $each: [req.body.payment_status.orderId],
               $position: 0,
             },
           },

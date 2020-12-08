@@ -1,22 +1,21 @@
 import React, { useEffect } from "react";
 import * as actions from "../actions/";
 import {  useDispatch, useSelector } from "react-redux";
-import { Button, Card, CardHeader, TextField } from "@material-ui/core";
+import { Button, Card, CardHeader, TextField,CircularProgress, CardContent, Typography, CardActions } from "@material-ui/core";
 import loadscript from "../functional/loadscript";
 import {  useHistory } from "react-router-dom";
-import {Alert} from "@material-ui/lab"
+import {Alert} from "@material-ui/lab";
+import homemini from "../assets/homemini.jpg"
+import Checkuser from "./Checkuser"
 const Page1: React.FC = () => {
-  useEffect(()=>{
-    dispatch(actions.delete_paymnetdata())
-  })
+ 
   const orderdetails = {
     product_name: "Product1",
     orderamount: 5000,
     reciept: "jsde42022",
   };
   const dispatch = useDispatch();
-  var flag = false;
-  const res = useSelector((state) => state);
+  dispatch(actions.delete_paymnetdata())
   let history = useHistory();
   async function loadRazer() {
     const construct = await loadscript(
@@ -33,12 +32,25 @@ const Page1: React.FC = () => {
     history.push("/payment_page");
   }
 
+  function userdetails()
+  {
+    dispatch(actions.user_data())
+    // history.push("/user")
+  }
   return (
     <div>
-      Page1<br/>
-      <Alert severity="warning">Payment</Alert>
+      Page1
+      
+      <Alert severity="warning" >Payment</Alert>
+      <img src={homemini}></img><br/>Name : {orderdetails.product_name}&nbsp; <br/>Amount:Rs{orderdetails.orderamount}<br/>
       <Button variant="contained" color="primary" onClick={loadRazer} >pay amount</Button>
-      {/* <Card>{red!?red.payment : null}</Card> */}
+      <Checkuser></Checkuser>
+      {/* <Card>
+      { 
+        detailsprint()
+      }<CardActions>
+       <Button variant="contained" color="secondary" onClick ={userdetails}>Check / Click to refresh after payment</Button>
+    </CardActions></Card> */}
     </div>
   );
 };
