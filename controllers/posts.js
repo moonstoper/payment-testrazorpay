@@ -3,12 +3,13 @@ import userprofile from "../models/profiles.js";
 import transaction from "../models/transaction.js";
 import Razorpay from "razorpay";
 import crypto from "crypto";
+import { mongokey, razor_key_id, razor_key_secret } from "../config/keys.js";
 export const profile = async (req, res) => {
   try {
     console.log("profile");
-    const Userprofile = await userprofile.findOne({ username: "suraj" });
-    res.json(Userprofile)
-    console.log(Userprofile)
+    const Userprofile = await userprofile.findOne({ username: "surajk" });
+    res.json(Userprofile);
+    console.log(Userprofile);
   } catch (error) {
     res.status(500);
   }
@@ -17,20 +18,20 @@ export const profile = async (req, res) => {
 export const payment = async (req, res) => {
   try {
     const instance = new Razorpay({
-      key_id: "rzp_test_j9UI9PNWEZNmJN",
-      key_secret: "uooir37C3ZPC5xcKQzFdZ8fr",
+      key_id: razor_key_id,
+      key_secret: razor_key_secret,
     });
     // console.log("created instance",req.body);
     const options = {
       amount: req.body.orderamount * 100,
       currency: "INR",
-      receipt: req.body.reciept,
+      receipt: req.body.receipt,
     };
     // console.log("reached payment",options);
     const payorder = await instance.orders.create(options);
 
     payorder.product_name = req.body.product_name;
-
+    payorder.duepayment = req.body.duepayment;
     if (!payorder) return res.status(500).send("Some error occurred");
 
     res.status(200).json(payorder);
@@ -66,30 +67,56 @@ export const paysuccess = async (req, res) => {
 export const transactionupdate = async (req, res) => {
   try {
     console.log("transaction update-->");
-    const connection_url =
-      "mongodb+srv://suraj-upi:5Jbqba4vUkeZNmSM@cluster0.m7isg.mongodb.net/upiprofile?retryWrites=true&w=majority";
+    const connection_url = mongokey;
     mongoose
       .connect(connection_url, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
       .then(console.log("logged in"));
-    await userprofile
-      .updateOne(
-        {
-          username: "suraj",
-        },
-        {
-          $push: {
-            transid: {
-              $each: [req.body.payment_status.orderId],
-              $position: 0,
+
+    console.log(req.body.payment.duepayment);
+    if (req.body.payment.duepayment > 0) {
+      console.log("pendingpay")
+      await userprofile
+        .updateOne(
+          {
+            username: req.body.user_info.username,
+          },
+          {
+            $push: {
+              transid: {
+                $each: [req.body.payment_status.orderId],
+                $position: 0,
+              },
             },
           },
-        },
-        { $set: { pendingPaymnet: 0 } }
-      )
-      .then(console.log("updated profile"));
+          {
+            $set:{pendingPayment:{
+              receipt:"hello",
+              amount:3000
+            }}
+          }
+        )
+        .then(console.log("updated profile"));
+    } else {
+      console.log("no pending pay")
+      await userprofile
+        .updateOne(
+          {
+            username: req.body.user_info.username,
+          },
+          {
+            $push: {
+              transid: {
+                $each: [req.body.payment_status.orderId],
+                $position: 0,
+              },
+            },
+          }
+        )
+        .then(console.log("updated profile"));
+    }
 
     await transaction
       .create({
@@ -98,7 +125,7 @@ export const transactionupdate = async (req, res) => {
         payee_name: "Suraj",
         name: req.body.payment.product_name,
         description: req.body.payment.description,
-        reciept: req.body.payment.receipt,
+        receipt: req.body.payment.receipt,
         order_id: req.body.payment_status.orderId,
       })
       .then(console.log("updated transactions"));

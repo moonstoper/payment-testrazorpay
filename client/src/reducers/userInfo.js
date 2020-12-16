@@ -3,7 +3,7 @@ const userInfo = (state=null, action)=>{
     switch (action.type) {
     case "USER_INFO":
         console.log("u[dating")
-        return action.payload || false;
+        return action.payload || null;
       default:
         return state;
     }

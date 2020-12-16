@@ -36,7 +36,8 @@ export const update_transaction =(transaction_data) => async(dispatch) =>{ //upd
 export const delete_paymnetdata = () => async(dispatch) =>{ //clear payment data after completion
     try{
         console.log("deleting.....")
-        const res = null;
+        const res = [];
+        console.log(res)
         dispatch({type:"UPDATE_TRANSACTION_DOCUMENT",payload:res.data})
         dispatch({type:"FETCH_ORDER",payload:res.data})
         dispatch({type:"FETCH_SUCCESS_ORDER",payload:res.data})
@@ -50,10 +51,22 @@ export const delete_paymnetdata = () => async(dispatch) =>{ //clear payment data
 
 export const user_data = () => async(dispatch) =>{  //fetching user info
     try { console.log("fetching....")
-        const res = await axios.get("http://localhost:5000/user");
+        const res = await axios.post("http://localhost:5000/activity/user");
         dispatch({type:"USER_INFO",payload:res.data})
         console.log("dispatched");
     } catch (error) {
         console.log(error.message)
     }
 }
+
+export const user_fetch = (user_fetch) => async(dispatch) =>{  //fetching user info
+    try {
+        const res = await axios.post("http://localhost:5000/user/login",user_fetch);
+        console.log(res)
+        dispatch({type:"USER_INFO",payload:res.data})
+        console.log("dispatched");
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+

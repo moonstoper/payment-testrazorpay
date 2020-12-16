@@ -1,5 +1,10 @@
 import express from "express";
-import {profile} from "../controllers/posts.js";
+import passport from "passport";
 const profilerouter = express.Router()
-profilerouter.get("/",profile);
+import passportLocal from "passport-local";
+import {loginprofile} from "../controllers/passportcontroller.js";
+
+profilerouter.post("/login",loginprofile);
 export default profilerouter;
+
+
