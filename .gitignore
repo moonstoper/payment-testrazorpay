@@ -9,7 +9,7 @@ node_modules
 /coverage
 # production
 /build
-
+config
 # misc
 .DS_Store
 .env.local

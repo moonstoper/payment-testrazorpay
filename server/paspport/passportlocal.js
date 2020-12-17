@@ -2,7 +2,7 @@ import userprofile from "../models/profiles.js";
 import passport from "passport";
 import passportLocal from "passport-local";
 import bcrypt from "bcrypt";
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 const LocalStrategy = passportLocal.Strategy;
 
