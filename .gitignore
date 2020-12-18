@@ -8,8 +8,9 @@ node_modules
 # testing
 /coverage
 # production
-/build
-config
+build
+./client/build
+./server/config
 # misc
 .DS_Store
 .env.local
