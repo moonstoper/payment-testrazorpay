@@ -11,4 +11,4 @@ How a user is connecting to the server and databse
 - Remaning/Pending amount is also handled ,user can pay the remaning and database is also updated accordingly,.
 - NO hotel table was made therefore product date of use is not locked.
 - Login is setup  /  Register method is also done but commited as it was only for testing.
-- Service worker setup but registering might be some issue with express currently looking
+- Service worker setup but not registering, might be some issue with express.js currently looking
