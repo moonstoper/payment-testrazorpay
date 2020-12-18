@@ -2,7 +2,7 @@ const userInfo = (state=null, action)=>{
     //console.log(action);
     switch (action.type) {
     case "USER_INFO":
-        console.log("u[dating")
+        console.log("updating")
         return action.payload || null;
       default:
         return state;
@@ -10,3 +10,4 @@ const userInfo = (state=null, action)=>{
   }
 
   export default userInfo;
+  // stores all the user's information

@@ -1,9 +1,10 @@
+//coonect to server side dispatches returned information to gloabal state variables
 import axios from "axios";
 export const get_payment =(orderdetails) => async(dispatch) =>{   // to create razorpay order
 
     try {
         const res = await axios.post("http://localhost:5000/activity/payments",orderdetails);
-        // console.log(res);
+        console.log(res);
         dispatch({type:"FETCH_ORDER",payload:res.data})
     }
     catch(error){
@@ -14,7 +15,7 @@ export const payment_handler =(data) => async(dispatch) =>{  // check if payment
 
     try {
         const res = await axios.post("http://localhost:5000/activity/payments/success",data);
-        // console.log(res);
+        console.log(res);
         dispatch({type:"FETCH_SUCCESS_ORDER",payload:res.data})
     }
     catch(error){
@@ -48,21 +49,9 @@ export const delete_paymnetdata = () => async(dispatch) =>{ //clear payment data
         console.log(error.message)
     }
 }
-
-export const user_data = () => async(dispatch) =>{  //fetching user info
-    try { console.log("fetching....")
-        const res = await axios.post("http://localhost:5000/activity/user");
-        dispatch({type:"USER_INFO",payload:res.data})
-        console.log("dispatched");
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-
 export const user_fetch = (user_fetch) => async(dispatch) =>{  //fetching user info
-    try {
+    try {console.log("axios-->")
         const res = await axios.post("http://localhost:5000/user/login",user_fetch);
-        console.log(res)
         dispatch({type:"USER_INFO",payload:res.data})
         console.log("dispatched");
     } catch (error) {

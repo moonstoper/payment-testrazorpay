@@ -9,20 +9,20 @@ import thunk from "redux-thunk";
 import reducers from "./reducers/";
 import { composeWithDevTools } from "redux-devtools-extension";
 import axios from "axios";
-const store = createStore(
+const store = createStore( // all services are defined and acclimated this is the main page
   reducers,
   composeWithDevTools(applyMiddleware(thunk))
 );
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={store}> //using redux store in app to get the state variables 
     <App />
   </Provider>,
   document.getElementById("root")
 );
 
-if ("serviceWorker" in navigator) {
+if ("serviceWorker" in navigator) {  // script to start the service worker
   window.addEventListener("load", function () {
-    navigator.serviceWorker.register("./serviceworker.js").then(
+    navigator.serviceWorker.register("./serviceworker.tsx").then(
       function (registration) {
         console.log(
           "Service Worker registered successfully with scope",

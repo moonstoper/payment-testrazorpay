@@ -2,28 +2,35 @@ import React, { useEffect, useState } from "react";
 import * as actions from "../actions/";
 import { RootStateOrAny, useDispatch, useSelector } from "react-redux";
 import { Button } from "@material-ui/core";
-import loadscript, { checkin } from "../functional/loadscript";
+import loadscript, {
+  checkin,
+  recieptgenerator,
+  LoadRazer,
+} from "../functional/loadscript";
 import { useHistory } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
 import homemini from "../assets/homemini.jpg";
 import Checkuser from "./Checkuser";
-const Page1: React.FC = () => {
+const Page1: React.FC = () => { // the front page or the paymnet page after which the payment process begins
   const res = useSelector((state: RootStateOrAny) => state.user_info);
-  const [chkdate, setchkdate] = useState("");
-  const [coutdate, setcoutdate] = useState("");
+  const [chkdate, setchkdate] = useState(""); // getting checkin date
+  const [coutdate, setcoutdate] = useState(""); // getting checkout date
   console.log(res);
-  const orderdetails = {
+  const orderdetails = { // creating payment object to be send to server to create payment instance
     product_name: "Product1",
     orderamount: 5000,
-    receipt: "jsde42022",
+    receipt: "",
     duepayment: 0,
+    checkindate: chkdate,
+    checkoutdate: coutdate,
   };
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(actions.delete_paymnetdata());
+    console.log(res);
   });
-  function prepay() {
-    if (checkin(chkdate)) {
+  function prepay() { // using the function to check if checkin date is more than 7 days 
+    if (checkin(chkdate)) { // and provide a option to only pay 30% upfront and 70% later
       console.log("ok");
       return (
         <span>
@@ -31,7 +38,7 @@ const Page1: React.FC = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => loadRazer(true)}
+            onClick={() => callRazer(true)}
           >
             pay amount {orderdetails.orderamount * 0.3}
           </Button>
@@ -40,28 +47,34 @@ const Page1: React.FC = () => {
     }
   }
   let history = useHistory();
-  async function loadRazer(advancepay: boolean) {
-    const construct = await loadscript(
-      "https://checkout.razorpay.com/v1/checkout.js"
-    );
-    if (!construct) {
-      alert("Razorpay sdk didn't load");
-      return;
-    } else {
-      alert("loaded");
+  async function callRazer(advancepay: boolean) {//calling function to load payment api in background start the paymnet process
+    //taking a boolean as parameter to check if user is paying 70% or 30%
+    if (LoadRazer()) { //loading script
+      if (advancepay) { // modifying orderdetails 
+        orderdetails.duepayment = orderdetails.orderamount * 0.7;
+        orderdetails.orderamount = orderdetails.orderamount * 0.3;
+      }
+      if (res === null) { //checking user if no send to login screen
+        console.log("heee");
+        history.push("/login");
+        console.log("not pushed");
+      } else { //if yess generate a receipt by calling a function
+        if (orderdetails.receipt === "") {
+          orderdetails.receipt = recieptgenerator(res);
+          console.log(orderdetails);
+        }// dispatching our orderdetails to server 
+        dispatch(actions.get_payment(orderdetails));
+        console.log("here");
+        history.push("/payment_page");
+      }
     }
-    if (advancepay) {
-      orderdetails.duepayment = orderdetails.orderamount * 0.7;
-      orderdetails.orderamount = orderdetails.orderamount * 0.3;
-    }
-    if (res === null) {
-      console.log("heee");
-      history.push("/login");
-      console.log("not pushed");
-    } else {
-      dispatch(actions.get_payment(orderdetails));
-      console.log("here");
-      history.push("/payment_page");
+  }
+  function user() { // simple top button which either show user name or login link
+    if (res === null) return <span>login</span>;
+    else {
+      var redx = JSON.parse(JSON.stringify(res));
+      console.log(redx);
+      return <span>Hi {redx.username}</span>;
     }
   }
   return (
@@ -73,20 +86,20 @@ const Page1: React.FC = () => {
         color="secondary"
         onClick={() => history.push("/login")}
       >
-        Login
+        {user()}
       </Button>
       <br />
       <img src={homemini} alt="pg_img"></img>
       <br />
       <label id="checkin">Checkin Date</label>
-      <input
+      <input //checkin date input 
         id="checkin"
         type="date"
         onChange={(e) => setchkdate(e.target.value)}
       />
       <br />
       <label id="checkout">Checkout Date</label>
-      <input
+      <input //checkout date input
         id="checkout"
         type="date"
         onChange={(e) => setcoutdate(e.target.value)}
@@ -98,12 +111,13 @@ const Page1: React.FC = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => loadRazer(false)}
+        onClick={() => callRazer(false)}
       >
         pay amount {orderdetails.orderamount}
       </Button>
       {prepay()}
       <Checkuser></Checkuser>
+      <a href="/userpage">USer</a>
     </div>
   );
 };

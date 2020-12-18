@@ -10,3 +10,4 @@ export default combineReducers({
   user_info: userInfo,
 });
 
+// variables are combined in one state 

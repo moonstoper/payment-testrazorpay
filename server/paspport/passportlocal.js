@@ -38,28 +38,33 @@ const LocalStrategy = passportLocal.Strategy;
 
 // }
 
-export default function(passport) {
+export default function(passport) { //creating local passport strategy 
   
   passport.use(
     new LocalStrategy((username, password, done) => {
 
       
-      try{console.log(username)
-      console.log(3+4)
-     const user = userprofile.findOne({ username: username }).then(console.log("serached"))
-     if(!user)
-     {
-       return done(null,null)
-     }
-      bcrypt.compare(password,user.password,(err,result)=>{
-       if(err)
+      try{console.log(typeof(username))
+     const user = userprofile.findOne({ username: username },(error,fnd)=>{ //chedckig data base using username
+       console.log("hi",fnd);
+       if(error) throw error;
+       if(!fnd)
        {
-         return done(null,null)
+         return done(null,false)
        }
        else{
-         return done(null,user)
+         bcrypt.compare(password,fnd.password,(e,result)=>{ // comparing the hashes 
+           if(e) throw e
+           if(!result) return done(null,false)
+           else {
+            return done(null,fnd)
+           }
+         })
+         
        }
      })
+        
+     
     }
       catch(error){
           console.log(error)
@@ -68,11 +73,10 @@ export default function(passport) {
     })
   );
 
-  passport.serializeUser((user,done)=>{
-    console.log("serializing")
+  passport.serializeUser((user,done)=>{ //storing the user credendtials in cookie when logged in
     done(null,user.id);
 })
-passport.deserializeUser((id,done)=>{
+passport.deserializeUser((id,done)=>{ //removing user credendtials form cookie when logged out
     userprofile.findOne({_id:id},(error,done)=>{
       console.log("deserializing")
         done(error,user)

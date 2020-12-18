@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const TransSchema = new mongoose.Schema({
+const TransSchema = new mongoose.Schema({ //schema for list of transactions
     transaction_id:String,
     amount:Number,
     date:{type:Date,default:new Date()},

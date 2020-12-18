@@ -17,47 +17,26 @@ const LocalStrategy = passportLocal.Strategy;
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 
-app.use(cors(
+app.use(cors( // for cross origin 
   {origin:"http://localhost:3000",
   credentials:true}
 ));
 app.use(
-  cookie({
+  cookie({ //using cookie and providing secret and cokkie age
     maxAge: 30 * 24 ** 60 * 60 * 1000,
     keys: ["324dsfsdimkdsmfiodsfmifmkldsmlksdmlkgmlksdmglmlfgml"],
   })
-);
-app.use(morgan("tiny"))
-app.use(passport.initialize())
-app.use(passport.session())
-profilepass(passport)
-app.use("/activity", postRouter);
-app.use("/user",userroute);
+); 
+app.use(morgan("tiny")) //for display post/get details
+app.use(passport.initialize()) //firing up passport
+app.use(passport.session()) //creating session
+profilepass(passport) //using a single instance of passport throughout express
+app.use("/activity", postRouter); // routes
+app.use("/user",userroute); //routes
 
 
 
-// app.post("/user/login",(req,res,next)=>{
-//   console.log("in the controller section",req.body);
-//     passport.authenticate("local",(e,user,done)=>{
-//         console.log("heloooooooo")
-//         if(e) throw e;
-//         if(!user) res.json("No user");
-//         else{
-//             req.logIn(user,e =>{
-//                 if(e) throw e;
-//                 res.json("Success Authenticate")
-//             })
-//         }
-//     })(req,res,next)
-// })
-
-
-
-
-
-
-
-const PORT = 5000;
+const PORT = 5000; // creating port at 5000
 const connection_url =
   mongokey;
 mongoose
@@ -66,7 +45,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(console.log("logged in"));
-mongoose.set("useFindAndModify", false);
+mongoose.set("useFindAndModify", false); //coonecting to mongo database
 
 
 
@@ -78,7 +57,9 @@ mongoose.set("useFindAndModify", false);
 
 
 
-
+app.get("/service-worker.js", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "service-worker.js"));
+}); // trying to fire up service worker
 
 console.log("Hello There");
 console.log(PORT);

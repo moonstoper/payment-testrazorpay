@@ -9,3 +9,4 @@ const payStatusReducer = (state=null, action)=>{
   }
 
   export default payStatusReducer;
+  //conatins message if order was successfull or not

@@ -1,8 +1,8 @@
 import express from "express";
-import {payment,paysuccess,transactionupdate,profile} from "../controllers/posts.js";
+import {payment,paysuccess,transactionupdate,register} from "../controllers/posts.js"; //impoting functions from controllers
 const router = express.Router();
-router.post("/user",profile);
-router.post("/payments",payment);
-router.post("/payments/success",paysuccess);
-router.post("/update/transaction",transactionupdate)
+router.post("/user/register",register); // serve route for registering user
+router.post("/payments",payment); // route for creating order insatnce
+router.post("/payments/success",paysuccess); //rouet for checking if payment was  successfull
+router.post("/update/transaction",transactionupdate) //route fro updating databse
 export default router;

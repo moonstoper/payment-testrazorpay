@@ -9,3 +9,4 @@ const updateTransaction = (state=null, action)=>{
   }
 
   export default updateTransaction;
+  //information if the updation was successfull or not of the collection

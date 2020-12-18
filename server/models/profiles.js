@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({ //schema for user profile
     username:String,
-    transid: [String],
+    transid: [{
+        receipt:String,
+        duepayment:Number,
+        total:Number,
+        paid:Number,
+        checkindate:String,
+        checkoutdate:String,
+
+    }],
     password:String,
-    pendingPayment: {
-        reciept : String, 
-        amount : {type:Number,default:0}
-    },
     checkindate: Date,
 
 });
