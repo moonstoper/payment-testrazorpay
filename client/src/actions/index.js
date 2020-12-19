@@ -59,3 +59,13 @@ export const user_fetch = (user_fetch) => async(dispatch) =>{  //fetching user i
     }
 }
 
+export const create_user = (register_info) => async(dispatch) =>{
+    try {
+        console.log("register ->>")
+        const res = await axios.post("http://localhost:5000/activity/register",register_info);
+        dispatch({type:"USER_INFO",payload:res.data})
+        console.log("dispatched response")
+    } catch (error) {
+        console.log(error.message)
+    }
+}

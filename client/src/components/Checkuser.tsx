@@ -55,7 +55,7 @@ const Checkuser: React.FC = () => {
   }
  
   function userdetails() {
-  
+    console.log(redx.user_info)
     if(redx.user_info!==null)
   {dispatch(actions.user_fetch({username:redx.user_info.username,password:redx.user_info.password}));
   detailsprint()}else{
@@ -76,7 +76,8 @@ const Checkuser: React.FC = () => {
         } else break;
       }
       return ( // returning th content along with format for rendering
-        <span>
+        
+        <div>
           <CardContent>
             <Typography color="textSecondary" gutterBottom>
               User Details
@@ -90,7 +91,7 @@ const Checkuser: React.FC = () => {
               {list}
             </Typography>
           </CardContent>
-        </span>
+        </div>
       );
     } else {
      

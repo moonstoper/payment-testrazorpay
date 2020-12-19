@@ -88,6 +88,7 @@ const Page1: React.FC = () => { // the front page or the paymnet page after whic
       >
         {user()}
       </Button>
+      <a href="/register_user"> Register</a>
       <br />
       <img src={homemini} alt="pg_img"></img>
       <br />
