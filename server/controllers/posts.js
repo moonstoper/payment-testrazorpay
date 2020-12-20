@@ -173,7 +173,12 @@ export const transactionupdate = async (req, res) => {
         )
         .then(console.log("updated profile due"));
     }
-
+    let receipt
+    if(req.body.payment.objectid!==undefined)
+    {
+      receipt = req.body.payment.objectid
+    }
+    else receipt = req.body.payment.receipt
     await transaction //create a object for transaction
       .create({
         transaction_id: req.body.payment_status.paymentId,
@@ -181,7 +186,7 @@ export const transactionupdate = async (req, res) => {
         payee_name: "Suraj",
         name: req.body.payment.product_name,
         description: req.body.payment.description,
-        receipt: req.body.payment.receipt,
+        receipt: receipt,
         order_id: req.body.payment_status.orderId,
       })
       .then(console.log("updated transactions"));
